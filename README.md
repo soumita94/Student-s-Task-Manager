@@ -1,69 +1,45 @@
-# Student Task Manager Deployment
+AI-Assisted Student Task & Schedule Manager
+An intelligent academic productivity system built for the B.Tech (Second Year) course at UEM Kolkata, specializing in Artificial Intelligence.
 
-This project has 2 deployable services:
-- FastAPI backend (`app/main.py`)
-- Streamlit frontend (`app/frontend.py`)
+Moving beyond passive task logging (CRUD), this system optimizes student focus by mathematically prioritizing tasks using a custom Urgency/Importance algorithm and predicting task durations based on historical behavioral data.
 
-## Important free-tier reality
+🚀 Key AI Specializations
+1. Dynamic Priority Scoring (Phase 2)
+The core of the system is the priority engine. It replaces static chronological sorting with a mathematical matrix (Urgency vs. Importance).
 
-- Railway and Render free tiers can change over time (credits, sleep, bandwidth limits).
-- For truly "no card, always free", use free resources where available and expect sleeping services.
-- Use a free Postgres provider (for example Neon/Supabase free tier) instead of SQLite in production.
+Urgency Factor: Calculated from the remaining time until the deadline.
 
-## 1) Deploy on Render (recommended path here)
+Importance Factor: Derived from the User-Assigned Importance (1-5) and specific academic Category Weights.
 
-This repo includes `render.yaml` for Blueprint deploy.
+Example Weighting:
 
-### Steps
-1. Push this repo to GitHub.
-2. In Render, choose **New +** -> **Blueprint** -> select your repo.
-3. Render creates:
-   - `student-task-api`
-   - `student-task-frontend`
-4. Set environment variables:
-   - On API service:
-     - `GOOGLE_API_KEY` = your Gemini key
-     - `DATABASE_URL` = your Postgres async URL
-     - `LLM_PROVIDER=gemini`
-     - `GEMINI_MODEL=gemini-2.5-flash`
-   - On frontend service:
-     - `STM_API_BASE` = URL of `student-task-api` (for example `https://student-task-api.onrender.com`)
-5. Deploy both services.
-6. Verify:
-   - API health: `https://<api-service>/health`
-   - Frontend UI: `https://<frontend-service>`
+DSA Practice: 1.5x
 
-## 2) Deploy on Railway
+Exam Prep: 1.3x
 
-Create 2 Railway services from the same repo.
+Project Work: 1.2x
 
-### Backend service
-- Start command:
-  - `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-- Variables:
-  - `GOOGLE_API_KEY`
-  - `LLM_PROVIDER=gemini`
-  - `GEMINI_MODEL=gemini-2.5-flash`
-  - `DATABASE_URL` (Railway Postgres URL or external free Postgres)
+General Assignment: 1.0x
 
-### Frontend service
-- Start command:
-  - `streamlit run app/frontend.py --server.port $PORT --server.address 0.0.0.0`
-- Variables:
-  - `STM_API_BASE=https://<your-backend-service-domain>`
+2. Behavioral Duration Prediction (Phase 3)
+Integrated with Scikit-learn (Linear Regression), the system:
 
-## Local env example
+Stores both the User's Estimated Duration and the Actual Completion Time.
 
-Use `.env` for local runs:
+Trains a simple regression model on historical task data.
 
-```env
-LLM_PROVIDER=gemini
-GOOGLE_API_KEY=your_key
-GEMINI_MODEL=gemini-2.5-flash
-DATABASE_URL=sqlite+aiosqlite:///./student_tasks.db
-```
+Automatically calculates a Predicted Duration (adding a personalized "procrastination buffer") when scheduling future work in that category.
 
-## Notes
+3. NLP Structuring Interface (Phase 4)
+Integrated with OpenAI GPT-4o to reduce the friction of manual task logging.
 
-- Gemini may return `503` during high demand; retry is already implemented.
-- If Gemini quota is exhausted, switch provider variables to OpenAI.
+Input: "Add a DBMS assignment due next Friday 5pm, high priority, 2 hours."
+
+Output: The backend calls GPT-4o to parse and map this natural language into the strict JSON schema required by the TaskCreate model.
+Component,Technology
+Backend,"FastAPI (Python 3.11+, Asynchronous)"
+Frontend,Streamlit (User Interface)
+Database,SQLite + SQLAlchemy ORM (Persistence)
+AI/NLP,Gemini API (Structured Parsing)
+ML Engine,Scikit-learn (Behavioral Regression)
+Deployment, Railway
