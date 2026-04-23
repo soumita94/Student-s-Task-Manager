@@ -37,7 +37,7 @@ Integrated with **OpenAI GPT-4o** to reduce the friction of manual task logging.
 | **Backend** | **FastAPI** (Python 3.11+, Asynchronous) |
 | **Frontend** | **Streamlit** (User Interface) |
 | **Database** | **SQLite** + **SQLAlchemy ORM** (Persistence) |
-| **AI/NLP** | **OpenAI GPT-4o API** (Structured Parsing) |
+| **AI/NLP** | **Gemini 2.5 flash API** (Structured Parsing) |
 | **ML Engine** | **Scikit-learn** (Behavioral Regression) |
 | **Deployment** | **Render / Streamlit Cloud** (Microservices) |
 
